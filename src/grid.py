@@ -12,8 +12,10 @@ class Grid():
         self.size = size
         self._grid = [[Cell() for cell in range(size)] for row in range(size)]
 
-    def coord(self, x, y):
+    def coord(self, x, y=None):
         #return cell at coordinate (x, y), where (0,0) is upper leftmost cell
+        if type(x) == tuple:
+            x, y = x
         return self._grid[y][x]
     
         
@@ -26,6 +28,8 @@ class Grid():
         for bomb_position_x, bomb_position_y in coords:
             cell = self.coord(bomb_position_x, bomb_position_y)
             cell.bomb = True
+            #add to bomb count of neighboring cells
+            self.add_nearby((bomb_position_x, bomb_position_y))
 
     def reveal(self, coords):
         #allow passing of single tuple of reveal coords, or a list of tuples of reveal coords
@@ -44,7 +48,7 @@ class Grid():
     def check_coord(self, coord):
         #return True if coord exists
         x, y = coord
-        if x >= self.size or y >= self.size:
+        if (0 > x or x >= self.size) or (0 > y or y >= self.size):
             return False
         return True
 
@@ -56,6 +60,15 @@ class Grid():
                 print_str += str(cell) + ' | '
             print_str += '\n'
         print(print_str)
+
+    def add_nearby(self, cell_coord):
+        adjacent_transformations = [(-1, -1), (0, -1), (1, -1),
+                                    (-1, 0),           (1, 0),
+                                    (-1, 1),  (0, 1),  (1, 1)]
+        for t in adjacent_transformations:
+            if self.check_coord((cell_coord[0] + t[0], cell_coord[1] + t[1])):
+                cell = self.coord((cell_coord[0] + t[0], cell_coord[1] + t[1]))
+                cell.nearby += 1
 
 #test / demo logic
 test = Grid()
