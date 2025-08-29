@@ -1,9 +1,10 @@
 '''
-RILEY ANDERSON
-08/26/2025
+RILEY ANDERSON & HANNAH SMITH 
+CREATED: 08/26/2025
+Last Edited: 8/28/2025
 Class definition for array of cells for minesweeper game
 '''
-
+import random
 from cell import Cell
 
 class Grid():
@@ -12,21 +13,21 @@ class Grid():
         self.size = size
         self._grid = [[Cell() for cell in range(size)] for row in range(size)]
 
-    def coord(self, x, y=None):
+    def get_cell(self, x, y=None):
         #return cell at coordinate (x, y), where (0,0) is upper leftmost cell
         if type(x) == tuple:
             x, y = x
         return self._grid[y][x]
     
         
-    def bomb(self, coords):
+    def apply_bomb(self, coords):
         #allow passing of single tuple of bomb coords, or a list of tuples of bomb coords
         #idea is a list can be passed for initialization
         if type(coords) != list:
             coords = [coords]
         
         for bomb_position_x, bomb_position_y in coords:
-            cell = self.coord(bomb_position_x, bomb_position_y)
+            cell = self.get_cell(bomb_position_x, bomb_position_y)
             cell.bomb = True
             #add to bomb count of neighboring cells
             self.add_nearby((bomb_position_x, bomb_position_y))
@@ -37,12 +38,12 @@ class Grid():
             coords = [coords]
         
         for reveal_position_x, reveal_position_y in coords:
-            cell = self.coord(reveal_position_x, reveal_position_y)
+            cell = self.get_cell(reveal_position_x, reveal_position_y)
             cell.revealed = True
 
     def flag(self, x, y, state: bool):
         #flag a cell
-        cell = self.coord(x, y)
+        cell = self.get_cell(x, y)
         cell.flagged = state
 
     def check_coord(self, coord):
@@ -67,20 +68,40 @@ class Grid():
                                     (-1, 1),  (0, 1),  (1, 1)]
         for t in adjacent_transformations:
             if self.check_coord((cell_coord[0] + t[0], cell_coord[1] + t[1])):
-                cell = self.coord((cell_coord[0] + t[0], cell_coord[1] + t[1]))
+                cell = self.get_cell((cell_coord[0] + t[0], cell_coord[1] + t[1]))
                 cell.nearby += 1
+    def place_bombs(self, firstClick_coord, bomb_amount = 10):
+        init_list = []
+        for i in range(10):
+            for j in range(10):
+                init_list.append((i,j))
+        init_list.remove(firstClick_coord)
+        bomb_list = random.choices(init_list, k=bomb_amount)
+        self.apply_bomb(bomb_list)
+
+        
+
 
 #test / demo logic
 test = Grid()
 #print grid pretty
 test.print_debug()
 #add list of bombs
-test.bomb([(0,3), (8,5)])
+test.apply_bomb([(0,3), (8,5)])
 #reveal list of cells
 test.reveal([(0,3), (9, 2), (6, 5)])
 #reveal single cell
 test.reveal((0, 0))
 #flag single cell
 test.flag(9, 0, True)
+#print grid pretty to check
+test.print_debug()
+
+#test / demo logic
+test = Grid()
+#print grid pretty
+test.print_debug()
+#test is bombs randomly applied to grid
+test.place_bombs((5,5))
 #print grid pretty to check
 test.print_debug()
