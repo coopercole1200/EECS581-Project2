@@ -15,9 +15,12 @@ class Grid():
 
     def get_cell(self, x, y=None):
         #return cell at coordinate (x, y), where (0,0) is upper leftmost cell
+        #can take in seperate x, y OR a tuple (x, y)
         if type(x) == tuple:
             x, y = x
-        return self._grid[y][x]
+
+        if self.check_coord((x, y)):
+            return self._grid[y][x]
     
         
     def apply_bomb(self, coords):
@@ -90,7 +93,7 @@ class Grid():
         x,y = firstClick_coord
         safe_zone = {(i, j) for i in range(x-1,x+2) for j in range(y-1, y+2)}
         options = {coord for coord in options if coord not in safe_zone}
-        bomb_list = random.sample(options, k=bomb_amount)
+        bomb_list = random.sample(sorted(options), k=bomb_amount)
         self.apply_bomb(bomb_list)
 
     def _flood_helper(self, coords, reveal_list):
@@ -120,23 +123,23 @@ class Grid():
         self._flood_helper(coords, revel_list)
         self.reveal(revel_list)
 
-#test / demo logic
-test = Grid()
-#print grid pretty
-test.print_debug()
-#add list of bombs
-test.apply_bomb([(0,3), (8,5)])
-#reveal list of cells
-test.reveal([(0,3), (9, 2), (6, 5)])
-#reveal single cell
-test.reveal((0, 0))
-#flag single cell
-test.flag(9, 0, True)
-#print grid pretty to check
-test.print_debug()
+# #test / demo logic
+# test = Grid()
+# #print grid pretty
+# test.print_debug()
+# #add list of bombs
+# test.bomb([(0,3), (8,5), (10,10)])
+# #reveal list of cells
+# test.reveal([(0,3), (9, 2), (6, 5)])
+# #reveal single cell
+# test.reveal((0, 0))
+# #flag single cell
+# test.flag(9, 0, True)
+# #print grid pretty to check
+# test.print_debug()
 
 #test / demo logic
-test = Grid(8)
+test = Grid(10)
 #print grid pretty
 test.print_debug()
 #test is bombs randomly applied to grid

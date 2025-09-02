@@ -14,8 +14,8 @@ class Cell():
         #overload for pretty printing
         #uncomment for mode (full info vs bomb,nearby,revealed vs nearby + bombs)
         # return f'b:{self.tf(self.bomb)}, f:{self.tf(self.flagged)}, r:{self.tf(self.revealed)}'
-        return f'b:{self.tf(self.bomb)}, n:{self.nearby} r:{self.tf(self.revealed)}'
-        # return f'{self.nearby if not self.bomb else "B"}'
+        #return f'b:{self.tf(self.bomb)}, n:{self.nearby} r:{self.tf(self.revealed)}'
+        return f'{(self.nearby if self.revealed else "X") if not self.bomb else "B"}'
     
     def tf(self, bool):
         if bool:
