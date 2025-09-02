@@ -52,9 +52,20 @@ class Grid():
         if (0 > x or x >= self.size) or (0 > y or y >= self.size):
             return False
         return True
+    def check_bomb(self, coord):
+        #return true is cell is marked as bomb
+        if self.get_cell(coord).bomb:
+            return True
+        return False 
+    
+    def check_nearby(self, coord):
+        #return true if cell's assigned nearby is strictly larger than 0
+        if self.get_cell(coord).nearby > 0:
+            return True
+        return False
 
     def print_debug(self):
-        #print grid to terminal for dbugging
+        #print grid to terminal for debugging
         print_str = ''
         for row in self._grid:
             for cell in row:
@@ -63,6 +74,7 @@ class Grid():
         print(print_str)
 
     def add_nearby(self, cell_coord):
+        #calculates the nearby function -- this might have an error didn't dig in
         adjacent_transformations = [(-1, -1), (0, -1), (1, -1),
                                     (-1, 0),           (1, 0),
                                     (-1, 1),  (0, 1),  (1, 1)]
@@ -70,17 +82,43 @@ class Grid():
             if self.check_coord((cell_coord[0] + t[0], cell_coord[1] + t[1])):
                 cell = self.get_cell((cell_coord[0] + t[0], cell_coord[1] + t[1]))
                 cell.nearby += 1
+
     def place_bombs(self, firstClick_coord, bomb_amount = 10):
-        init_list = []
-        for i in range(10):
-            for j in range(10):
-                init_list.append((i,j))
-        init_list.remove(firstClick_coord)
-        bomb_list = random.choices(init_list, k=bomb_amount)
+        #randomly places bombs on board outside of save zone
+        #safe zone defined as 3X3 area around the first click 
+        options = {(i, j) for i in range(self.size) for j in range(self.size)}
+        x,y = firstClick_coord
+        safe_zone = {(i, j) for i in range(x-1,x+2) for j in range(y-1, y+2)}
+        options = {coord for coord in options if coord not in safe_zone}
+        bomb_list = random.sample(options, k=bomb_amount)
         self.apply_bomb(bomb_list)
 
-        
+    def _flood_helper(self, coords, reveal_list):
+        #recursive helper function to fill the board
+        #returns if outside of boundaries, already checked, is a bomb
+        #reveals any squares with nearbys larger than 0, but does not explore further 
+        if not self.check_coord(coords):
+            return
+        if coords in reveal_list:
+            return
+        if self.check_bomb(coords):
+            return
+        reveal_list.append(coords) 
+        if self.check_nearby(coords):
+            return
+        x, y = coords
+        self._flood_helper((x, y-1), reveal_list)
+        self._flood_helper((x+1, y), reveal_list)
+        self._flood_helper((x, y+1), reveal_list)
+        self._flood_helper((x-1, y), reveal_list)
 
+    
+    def flood_revel(self, coords):
+        #public reveal function that calls recursive function and 
+        # then also passes list to reveal
+        revel_list = []
+        self._flood_helper(coords, revel_list)
+        self.reveal(revel_list)
 
 #test / demo logic
 test = Grid()
@@ -98,10 +136,14 @@ test.flag(9, 0, True)
 test.print_debug()
 
 #test / demo logic
-test = Grid()
+test = Grid(8)
 #print grid pretty
 test.print_debug()
 #test is bombs randomly applied to grid
 test.place_bombs((5,5))
+#prints grid pretty to reference and check
+test.print_debug()
+#test flood function 
+test.flood_revel((5,5))
 #print grid pretty to check
 test.print_debug()
