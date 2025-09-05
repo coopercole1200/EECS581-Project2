@@ -5,13 +5,24 @@ Last Edited: 8/28/2025
 Class definition for array of cells for minesweeper game
 '''
 import random
+import math
 from cell import Cell
 
 class Grid():
     def __init__(self, size=10):
         #initialize a grid of cells, default size 10
         self.size = size
-        self._grid = [[Cell() for cell in range(size)] for row in range(size)]
+        self._grid = [[] for row in range(size)]
+        self.first = False
+
+    def make_grid(self, mouse_coords):
+        self.cell_list = []
+        for coord in mouse_coords:
+            target_cell = Cell(coord[1], coord[0])
+            self.cell_list.append(target_cell)
+        for i in range((self.size**2)):
+            print(i)
+            self._grid[math.floor(i/self.size)].append(self.cell_list[i])
 
     def get_cell(self, x, y=None):
         #return cell at coordinate (x, y), where (0,0) is upper leftmost cell
@@ -21,6 +32,14 @@ class Grid():
 
         if self.check_coord((x, y)):
             return self._grid[y][x]
+        
+    def mouse_coord(self, coords):
+        x, y = coords
+        padding = 50
+        width = 50
+        if (padding < x < (width * 10)+padding) and (padding < y < (width * 10)+padding):
+            return((x-padding) // width, (y-padding) // width)
+        return None
     
         
     def apply_bomb(self, coords):
@@ -119,9 +138,13 @@ class Grid():
     def flood_revel(self, coords):
         #public reveal function that calls recursive function and 
         # then also passes list to reveal
+        if not self.first:
+            self.place_bombs(coords)
+            self.first = True
         revel_list = []
         self._flood_helper(coords, revel_list)
         self.reveal(revel_list)
+        self.print_debug()
 
 # #test / demo logic
 # test = Grid()
@@ -139,14 +162,14 @@ class Grid():
 # test.print_debug()
 
 #test / demo logic
-test = Grid(10)
-#print grid pretty
-test.print_debug()
-#test is bombs randomly applied to grid
-test.place_bombs((5,5))
-#prints grid pretty to reference and check
-test.print_debug()
-#test flood function 
-test.flood_revel((5,5))
-#print grid pretty to check
-test.print_debug()
+# test = Grid(10)
+# #print grid pretty
+# test.print_debug()
+# #test is bombs randomly applied to grid
+# test.place_bombs((5,5))
+# #prints grid pretty to reference and check
+# test.print_debug()
+# #test flood function 
+# test.flood_revel((5,5))
+# #print grid pretty to check
+# test.print_debug()
