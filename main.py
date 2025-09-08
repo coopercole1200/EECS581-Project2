@@ -30,6 +30,7 @@ dropdown = Dropdown(
 
 MENU = True
 GAME = False
+GAMEOVER = False
 
 # button
 startButton = pygame.Rect((displaySize//2)-125, 100, 200, 60)
@@ -58,6 +59,15 @@ def drawGame():
         pygame.draw.line(gameDisplay, (0, 0, 0), (padding + x, padding), (padding + x, padding + gameSize))
     for y in range(0, gameSize + 1, cellSize):
         pygame.draw.line(gameDisplay, (0, 0, 0), (padding, padding + y), (padding + gameSize, padding + y))
+
+def drawEndScreen():
+    # fill screen with gray
+    gameDisplay.fill((200, 200, 200)) # maybe remove this - just added it in case we need to draw over the game board
+
+    text = pygame.font.Font(None, 60).render("GAME OVER", True, (0,0,0))
+    gameDisplay.blit(text, (displaySize//2 - 125, displaySize//2))
+    
+
 
 running = True
 
@@ -88,6 +98,8 @@ while running:
         pygame_widgets.update(events)
     elif GAME: 
         drawGame()
+    elif GAMEOVER:
+        drawEndScreen()
 
     # update screen
     pygame.display.update()
