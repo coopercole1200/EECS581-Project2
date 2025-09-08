@@ -54,18 +54,28 @@ class Grid():
             #add to bomb count of neighboring cells
             self.add_nearby((bomb_position_x, bomb_position_y))
 
-    def reveal(self, coords):
+    def reveal(self, coords=None):
         #allow passing of single tuple of reveal coords, or a list of tuples of reveal coords
-        if type(coords) != list:
+        if type(coords) != list and coords is not None:
             coords = [coords]
         
-        for reveal_position_x, reveal_position_y in coords:
-            cell = self.get_cell(reveal_position_x, reveal_position_y)
-            cell.revealed = True
+        if coords is None:
+            for row in self._grid:
+                for cell in row:
+                    cell.revealed = True
+        
+        else:
+            for reveal_position_x, reveal_position_y in coords:
+                cell = self.get_cell(reveal_position_x, reveal_position_y)
+                cell.revealed = True
 
-    def flag(self, x, y, state: bool):
+    def flag(self, x, y=None):
         #flag a cell
+        if type(x) == tuple:
+            x, y = x
+
         cell = self.get_cell(x, y)
+        state = not cell.flagged
         cell.flagged = state
 
     def check_coord(self, coord):
@@ -141,6 +151,11 @@ class Grid():
         if not self.first:
             self.place_bombs(coords)
             self.first = True
+        cell = self.get_cell(coords)
+        if cell.flagged:
+            return
+        if cell.bomb:
+            self.reveal()
         revel_list = []
         self._flood_helper(coords, revel_list)
         self.reveal(revel_list)

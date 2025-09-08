@@ -61,7 +61,10 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             print(event.pos)
-            grid.flood_revel(grid.mouse_coord(event.pos))
+            if event.button == 1:
+                grid.flood_revel(grid.mouse_coord(event.pos))
+            if event.button == 3:
+                grid.flag(grid.mouse_coord(event.pos))
     
     all_cells.clear(gameDisplay, gameDisplay)
     all_cells.update()

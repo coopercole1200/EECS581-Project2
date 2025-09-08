@@ -4,6 +4,7 @@ RILEY ANDERSON
 Class definition for individual cell of minesweeper game'''
 
 import pygame
+from math import sin
 
 class Cell(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -11,6 +12,9 @@ class Cell(pygame.sprite.Sprite):
         self.flagged = False
         self.revealed = False
         self.nearby = 0
+        self.x = x
+        self.y = y
+        self.it = x
 
         #pygame init
         super().__init__()  # Initialize the parent Sprite class
@@ -22,18 +26,24 @@ class Cell(pygame.sprite.Sprite):
     def update(self):
         #funct that updates sprite image based on state
         if not self.revealed:
-            pass
+            if self.flagged:
+                self.image = pygame.image.load('textures\\Flagged_Tile.png').convert_alpha()
+            else:
+                self.image = pygame.image.load('textures\\Unrevealed_Tile.png').convert_alpha()
         else:
             if self.bomb:
-                self.image = pygame.image.load('textures\\Bomb_Tile.png').convert_alpha()
-            elif self.flagged:
-                self.image = pygame.image.load('textures\\Flagged_Tile.png').convert_alpha()
+                self.image = pygame.image.load('textures\\Mine_Tile.png').convert_alpha()
             elif self.nearby != 0:
                 self.image = pygame.image.load('textures\\Number_Tile.png').convert_alpha()
             else:
                 self.image = pygame.image.load('textures\\Revealed_Tile.png').convert_alpha()
 
         self.image = pygame.transform.scale(self.image, (50, 50))
+
+        #wittle wiggle
+        if not self.revealed:
+            self.rect.topleft = (self.x, self.y+2*(sin((self.y+self.it)/2)))
+            self.it += 1
 
     def __str__(self):
         #overload for pretty printing
