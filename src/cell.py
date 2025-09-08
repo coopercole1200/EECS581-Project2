@@ -34,7 +34,7 @@ class Cell(pygame.sprite.Sprite):
             if self.bomb:
                 self.image = pygame.image.load('textures\\Mine_Tile.png').convert_alpha()
             elif self.nearby != 0:
-                self.image = pygame.image.load('textures\\Number_Tile.png').convert_alpha()
+                self.image = pygame.image.load(f'textures\\Tile_{self.nearby}.png').convert_alpha()
             else:
                 self.image = pygame.image.load('textures\\Revealed_Tile.png').convert_alpha()
 
