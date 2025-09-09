@@ -19,7 +19,7 @@ pygame.display.set_caption("Minesweeper")
 
 # dropdown
 dropdown = Dropdown(
-    gameDisplay, (displaySize//2)+100, (displaySize//2)-200, 60, 50,
+    gameDisplay, (displaySize//2)+100, (displaySize//2)-175, 60, 40,
     name='Bombs',
     choices=['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'],
     borderRadius=3,
@@ -33,11 +33,13 @@ GAME = False
 GAMEOVER = False
 
 # button
-startButton = pygame.Rect((displaySize//2)-125, 100, 200, 60)
+startButton = pygame.Rect((displaySize//2)-125, 125, 200, 60)
 
 def drawStartMenu(): 
-    title = pygame.font.Font(None, 60).render("Minesweeper", True, (0,0,0))
-    startText = pygame.font.Font(None, 30).render("Start", True, (0,0,0))
+    title = pygame.font.SysFont('Impact', 60)
+    title = title.render("Minesweeper", True, (0,0,0))
+    startText = pygame.font.SysFont('Impact', 30)
+    startText = startText.render("Start", True, (0,0,0))
     
     gameDisplay.blit(title,(displaySize//2 - title.get_width()//2, 25))
     
@@ -50,6 +52,7 @@ def drawStartMenu():
     gameDisplay.blit(startText, (startButton.centerx - startText.get_width()//2, startButton.centery - startText.get_height()//2))
 
 def drawGame():
+    font = pygame.font.SysFont('Comic Sans MS', 16)
     # draw white background
     pygame.draw.rect(gameDisplay, (255, 255, 255),
                      (padding, padding, gameSize, gameSize))
@@ -59,6 +62,22 @@ def drawGame():
         pygame.draw.line(gameDisplay, (0, 0, 0), (padding + x, padding), (padding + x, padding + gameSize))
     for y in range(0, gameSize + 1, cellSize):
         pygame.draw.line(gameDisplay, (0, 0, 0), (padding, padding + y), (padding + gameSize, padding + y))
+
+    # add column labels (A-J)
+    for i in range(10):
+        label = chr(ord('A') + i)
+        text_surface = font.render(label, True, (0, 0, 0))
+        x_pos = padding + (i * cellSize) + (cellSize // 2) - (text_surface.get_width() // 2)
+        y_pos = padding - 20 
+        gameDisplay.blit(text_surface, (x_pos, y_pos))
+
+    # add row labels (1-10)
+    for i in range(10):
+        label = str(i + 1)
+        text_surface = font.render(label, True, (0, 0, 0))
+        x_pos = padding - 30 
+        y_pos = padding + (i * cellSize) + (cellSize // 2) - (text_surface.get_height() // 2)
+        gameDisplay.blit(text_surface, (x_pos, y_pos))
 
 def drawEndScreen():
     # fill screen with gray
