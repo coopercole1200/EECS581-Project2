@@ -21,7 +21,6 @@ class Grid():
             target_cell = Cell(coord[1], coord[0])
             self.cell_list.append(target_cell)
         for i in range((self.size**2)):
-            print(i)
             self._grid[math.floor(i/self.size)].append(self.cell_list[i])
 
     def get_cell(self, x, y=None):
