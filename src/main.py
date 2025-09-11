@@ -113,6 +113,9 @@ def startGame():
         all_cells.add(cell)
     #all_cells.draw(gameDisplay)
 
+# fill screen with gray
+gameDisplay.fill((200, 200, 200))
+
 running = True
 while running:
     # grid =[]
@@ -127,6 +130,7 @@ while running:
                     numBombs = dropdown.getSelected()
                     dropdown = None
                     startGame()
+                    draw_gameboard()
                     MENU = False
                     GAME = True
                     break
@@ -139,16 +143,12 @@ while running:
                     grid.flood_revel(grid.mouse_coord(event.pos))
                 if event.button == 3:
                     grid.flag(grid.mouse_coord(event.pos))
-    
-    # fill screen with gray
-    gameDisplay.fill((200, 200, 200))
+
 
     if MENU: 
         drawStartMenu()
         # update widgets
         pygame_widgets.update(events)
-    elif GAME:
-        draw_gameboard()
     elif GAMEOVER:
         drawEndScreen()
 
