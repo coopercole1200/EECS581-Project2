@@ -95,6 +95,21 @@ class Grid():
             return True
         return False
 
+    def check_win(self):
+        for row in self._grid:
+            for cell in row:
+                if (not cell.revealed and not cell.bomb) or (cell.bomb and not cell.flagged):
+                    print("Hi from first check")
+                    return False
+        print("HI from true!")
+        return True
+    def check_lose(self):
+        for row in self._grid:
+            for cell in row:
+                if not cell.revealed:
+                    return False
+        return True
+
     def print_debug(self):
         #print grid to terminal for debugging
         print_str = ''
@@ -114,7 +129,7 @@ class Grid():
                 cell = self.get_cell((cell_coord[0] + t[0], cell_coord[1] + t[1]))
                 cell.nearby += 1
 
-    def place_bombs(self, firstClick_coord, bomb_amount = 10):
+    def place_bombs(self, firstClick_coord, bomb_amount):
         #randomly places bombs on board outside of save zone
         #safe zone defined as 3X3 area around the first click 
         options = {(i, j) for i in range(self.size) for j in range(self.size)}
@@ -142,13 +157,17 @@ class Grid():
         self._flood_helper((x+1, y), reveal_list)
         self._flood_helper((x, y+1), reveal_list)
         self._flood_helper((x-1, y), reveal_list)
+        self._flood_helper((x-1, y-1), reveal_list) 
+        self._flood_helper((x+1, y-1), reveal_list) 
+        self._flood_helper((x+1, y+1), reveal_list) 
+        self._flood_helper((x-1, y+1), reveal_list)
 
     
-    def flood_revel(self, coords):
+    def flood_revel(self, coords, bomb_amount=10):
         #public reveal function that calls recursive function and 
         # then also passes list to reveal
         if not self.first:
-            self.place_bombs(coords)
+            self.place_bombs(coords, bomb_amount)
             self.first = True
         cell = self.get_cell(coords)
         if cell.flagged:
