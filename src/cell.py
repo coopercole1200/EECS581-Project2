@@ -65,6 +65,8 @@ class Cell(pygame.sprite.Sprite):
         if not self.revealed:
             self.rect.topleft = (self.x, self.y+2*(sin((self.y+self.it)/2)))
             self.it += 1
+        else:
+            self.rect.topleft = (self.x, self.y)
 
     def __str__(self):
         #overload for pretty printing
