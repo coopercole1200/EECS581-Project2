@@ -99,9 +99,7 @@ class Grid():
         for row in self._grid:
             for cell in row:
                 if (not cell.revealed and not cell.bomb) or (cell.bomb and not cell.flagged):
-                    print("Hi from first check")
                     return False
-        print("HI from true!")
         return True
     def check_lose(self):
         for row in self._grid:

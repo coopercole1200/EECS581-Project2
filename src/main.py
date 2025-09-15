@@ -80,20 +80,20 @@ def draw_gameboard():
         y_corner.append(padding + y)
     
         # add column labels (A-J)
-    # for i in range(10):
-    #     label = chr(ord('A') + i)
-    #     text_surface = font.render(label, True, (0, 0, 0))
-    #     x_pos = padding + (i * cellSize) + (cellSize // 2) - (text_surface.get_width() // 2)
-    #     y_pos = padding - 20 
-    #     gameDisplay.blit(text_surface, (x_pos, y_pos))
+    for i in range(10):
+        label = chr(ord('A') + i)
+        text_surface = font.render(label, True, (0, 0, 0))
+        x_pos = padding + (i * cellSize) + (cellSize // 2) - (text_surface.get_width() // 2)
+        y_pos = padding - 20 
+        gameDisplay.blit(text_surface, (x_pos, y_pos))
 
-    # # add row labels (1-10)
-    # for i in range(10):
-    #     label = str(i + 1)
-    #     text_surface = font.render(label, True, (0, 0, 0))
-    #     x_pos = padding - 30 
-    #     y_pos = padding + (i * cellSize) + (cellSize // 2) - (text_surface.get_height() // 2)
-    #     gameDisplay.blit(text_surface, (x_pos, y_pos))
+    # add row labels (1-10)
+    for i in range(10):
+        label = str(i + 1)
+        text_surface = font.render(label, True, (0, 0, 0))
+        x_pos = padding - 30 
+        y_pos = padding + (i * cellSize) + (cellSize // 2) - (text_surface.get_height() // 2)
+        gameDisplay.blit(text_surface, (x_pos, y_pos))
 
 def drawEndScreen():
     # fill screen with gray
@@ -102,7 +102,6 @@ def drawEndScreen():
     gameDisplay.blit(text, (displaySize//2 - 125, displaySize//2))
 
 def drawGameOver():
-    print("HIIIIIIIIIIIIIIIIIII Hannah")
     text = pygame.font.Font(None, 60).render("GAME OVER", True, (0,0,0))
     gameDisplay.blit(text, (displaySize//2 - 125, displaySize//2))
 
@@ -149,26 +148,24 @@ while running:
                         grid.flood_revel(grid.mouse_coord(event.pos), int(numBombs))
                     else:
                         grid.flood_revel(grid.mouse_coord(event.pos))
-                        if grid.check_win():
-                            WIN = True
-                            GAME = False
-                        elif grid.check_lose():
-                            print("Hi HANNAH")
-                            GAMEOVER = True
-                            GAME = False
                 if event.button == 3:
                     grid.flag(grid.mouse_coord(event.pos))
-
+    
     if MENU: 
         drawStartMenu()
         # update widgets
         pygame_widgets.update(events)
     elif GAMEOVER:
-        print("HIIIIIII HANNAH")
         drawGameOver()
     elif WIN:
         drawEndScreen()
     else:
+        if grid.check_win():
+            WIN = True
+            GAME = False
+        elif grid.check_lose():
+            GAMEOVER = True
+            GAME = False
         all_cells.clear(gameDisplay, gameDisplay)
         all_cells.update()
         all_cells.draw(gameDisplay)
