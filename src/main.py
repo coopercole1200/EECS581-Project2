@@ -1,3 +1,15 @@
+"""
+Functions: 
+drawStartMenu -> draws the start page
+drawGameboard -> after player starts the game this function draws the main grid
+drawEndScreen -> display the winning screen
+drawGameOver -> display the game over screen
+startGame -> initialize the game
+Inputs: User will select the number of bombs on the start page 
+Outputs: Playable minesweeper front end 
+Authors: Colin Treanor, Riley Anderson, Hannah Smith
+"""
+
 import pygame
 import pygame_widgets
 from grid import Grid
@@ -24,7 +36,7 @@ grid = Grid()
 gameDisplay = pygame.display.set_mode((displaySize, displaySize)) #display
 pygame.display.set_caption("Minesweeper") 
 
-# dropdown
+# dropdown component for the number of bombs selected
 dropdown = Dropdown(
     gameDisplay, (displaySize//2)+100, (displaySize//2)-175, 60, 40,
     name='Bombs',
@@ -43,6 +55,7 @@ WIN = False
 # button
 startButton = pygame.Rect((displaySize//2)-125, 125, 200, 60)
 
+# draw the start page
 def drawStartMenu(): 
     title = pygame.font.SysFont('Impact', 60)
     title = title.render("Minesweeper", True, (0,0,0))
@@ -59,7 +72,8 @@ def drawStartMenu():
 
     gameDisplay.blit(startText, (startButton.centerx - startText.get_width()//2, startButton.centery - startText.get_height()//2))
 
-def draw_gameboard():
+# draw the main grid
+def drawGameboard():
     font = pygame.font.SysFont('Comic Sans MS', 16)
     # fill whole screen with gray 
     gameDisplay.fill((200, 200, 200)) 
@@ -95,16 +109,19 @@ def draw_gameboard():
         y_pos = padding + (i * cellSize) + (cellSize // 2) - (text_surface.get_height() // 2)
         gameDisplay.blit(text_surface, (x_pos, y_pos))
 
+# draw you win page
 def drawEndScreen():
     # fill screen with gray
     gameDisplay.fill((200, 200, 200)) # maybe remove this - just added it in case we need to draw over the game board
     text = pygame.font.Font(None, 60).render("YOU WIN", True, (0,0,0))
     gameDisplay.blit(text, (displaySize//2 - 125, displaySize//2))
 
+# draw game over page
 def drawGameOver():
     text = pygame.font.Font(None, 60).render("GAME OVER", True, (0,0,0))
     gameDisplay.blit(text, (displaySize//2 - 125, displaySize//2))
 
+# initialize the game
 def startGame():
     global all_cells
     all_cells.empty()
@@ -121,6 +138,7 @@ def startGame():
 # fill screen with gray
 gameDisplay.fill((200, 200, 200))
 
+# main loop
 running = True
 while running:
     events = pygame.event.get()
@@ -134,7 +152,7 @@ while running:
                     numBombs = dropdown.getSelected()
                     dropdown = None
                     startGame()
-                    draw_gameboard()
+                    drawGameboard()
                     MENU = False
                     GAME = True
                     break
