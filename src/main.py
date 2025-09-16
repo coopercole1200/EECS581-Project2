@@ -13,7 +13,6 @@ Authors: Colin Treanor, Riley Anderson, Hannah Smith
 import pygame
 import pygame_widgets
 from grid import Grid
-from cell import Cell
 from pygame_widgets.button import Button 
 from pygame_widgets.dropdown import Dropdown
 
