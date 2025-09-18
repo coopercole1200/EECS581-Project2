@@ -121,11 +121,16 @@ def drawGameboard():
 def drawEndScreen():
     # fill screen with gray
     gameDisplay.fill((200, 200, 200)) # maybe remove this - just added it in case we need to draw over the game board
+    image = pygame.image.load('textures/Win_Screen.png').convert_alpha()
+    gameDisplay.blit(image, (displaySize//2 - image.get_width()//2, HEADER_HEIGHT + displaySize//2 - image.get_height()//2))
     text = pygame.font.Font(None, 60).render("YOU WIN", True, (0,0,0))
     gameDisplay.blit(text, (displaySize//2 - 125, HEADER_HEIGHT + displaySize//2))
 
 # draw game over page
 def drawGameOver():
+    gameDisplay.fill((200, 200, 200))
+    image = pygame.image.load('textures/Lose_Screen.png').convert_alpha()
+    gameDisplay.blit(image, (displaySize//2 - image.get_width()//2, HEADER_HEIGHT + displaySize//2 - image.get_height()//2))
     text = pygame.font.Font(None, 60).render("GAME OVER", True, (0,0,0))
     gameDisplay.blit(text, (displaySize//2 - 125, HEADER_HEIGHT + displaySize//2))
 
