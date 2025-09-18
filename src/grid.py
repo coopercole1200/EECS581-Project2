@@ -18,7 +18,7 @@ class Grid():
     def make_grid(self, mouse_coords):
         self.cell_list = []
         for coord in mouse_coords:
-            target_cell = Cell(coord[1], coord[0])
+            target_cell = Cell(coord[0], coord[1])  # x, y order
             self.cell_list.append(target_cell)
         for i in range((self.size**2)):
             self._grid[math.floor(i/self.size)].append(self.cell_list[i])
