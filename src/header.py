@@ -18,10 +18,10 @@ def init_header(display_width: int, header_height: int):
         return
 
     # --- images ---
-    planks_raw = pygame.image.load("assets/planks.png").convert_alpha()
-    wheel_raw  = pygame.image.load("assets/wheel.png").convert_alpha()
-    compass_raw = pygame.image.load("assets/compass.png").convert_alpha()
-    buoy_raw   = pygame.image.load("assets/buoy.png").convert_alpha()
+    planks_raw = pygame.image.load("textures/planks.png").convert_alpha()
+    wheel_raw  = pygame.image.load("textures/wheel.png").convert_alpha()
+    compass_raw = pygame.image.load("textures/compass.png").convert_alpha()
+    buoy_raw   = pygame.image.load("textures/buoy.png").convert_alpha()
 
     wheel   = pygame.transform.smoothscale(wheel_raw,   (100, 100))
     compass = pygame.transform.smoothscale(compass_raw, (100, 100))
