@@ -128,6 +128,9 @@ def drawEndScreen():
 
 # draw game over page
 def drawGameOver():
+    gameDisplay.fill((200, 200, 200))
+    image = pygame.image.load('textures/Lose_Screen.png').convert_alpha()
+    gameDisplay.blit(image, (displaySize//2 - image.get_width()//2, HEADER_HEIGHT + displaySize//2 - image.get_height()//2))
     text = pygame.font.Font(None, 60).render("GAME OVER", True, (0,0,0))
     gameDisplay.blit(text, (displaySize//2 - 125, HEADER_HEIGHT + displaySize//2))
 
