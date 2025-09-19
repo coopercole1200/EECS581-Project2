@@ -175,7 +175,7 @@ class Grid():
         revel_list = []
         self._flood_helper(coords, revel_list)
         self.reveal(revel_list)
-        self.print_debug()
+        # self.print_debug()
 
 # #test / demo logic
 # test = Grid()

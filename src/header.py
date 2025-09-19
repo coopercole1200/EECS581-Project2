@@ -69,6 +69,15 @@ def draw_header(surface: pygame.Surface, buoys_left: int, start_time: float,
          header_height // 2 - wheel.get_height() // 2)
     )
 
+    # Add NOW PLAYING text to wheel
+    if not stopped:
+        playing_text = font_timer.render("NOW PLAYING", True, WHITE)
+        playing_shadow = font_timer.render("NOW PLAYING", True, BLACK)
+        text_x = display_width // 2 - playing_text.get_width() // 2
+        text_y = (wheel.get_height() // 2 + playing_text.get_height() // 2)
+        surface.blit(playing_shadow, (text_x + 1, text_y + 1))
+        surface.blit(playing_text, (text_x, text_y))
+
     # Compass on the right
     compass_x = display_width - compass.get_width() - 30
     compass_y = header_height // 2 - compass.get_height() // 2
