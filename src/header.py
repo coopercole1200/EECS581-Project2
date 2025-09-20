@@ -1,6 +1,16 @@
-# header.py
-# Small helper that draws the nautical header at the top of the main surface.
+"""
+Functions:
+init_header -> load/scale header assets (images, fonts)
+draw_header -> render header (planks, wheel, compass, buoy count, timer, "NOW PLAYING")
 
+Inputs: 
+display size, header height, buoys left, start time, stopped state, elapsed time
+
+Outputs: 
+Header bar drawn on game surface
+
+Authors: Jacob Richards,    
+"""
 import pygame
 import time
 
