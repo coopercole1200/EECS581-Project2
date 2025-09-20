@@ -7,4 +7,6 @@ To start our minesweeper program, type in "python3 src/main.py" and press enter 
 Enjoy playing minesweeper!
 
 Best,
+
 Dustin, Colin, Riley, Hannah, Ryland, Jacob
+
