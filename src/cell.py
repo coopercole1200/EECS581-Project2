@@ -1,7 +1,13 @@
 '''
-RILEY ANDERSON
-08/26/2025
-Class definition for individual cell of minesweeper game'''
+functions: 
+update -> #func that updates sprite image based on state
+str -> #overload for pretty printing for debugging 
+tf -> helps with printing for debugging 
+Inputs: the x and y coordinates 
+outputs: a cell class that is also a pygame sprite 
+Outside sources: minor chatpgt and github copilot 
+Authors: RILEY ANDERSON, RYLAND EDWARDS
+Creation Date: 08/26/2025 '''
 
 import pygame
 from math import sin

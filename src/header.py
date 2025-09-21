@@ -9,7 +9,9 @@ display size, header height, buoys left, start time, stopped state, elapsed time
 Outputs: 
 Header bar drawn on game surface
 
-Authors: Jacob Richards,    
+Authors: Jacob Richards, Riley Anderson, Ryland Edwards Dustin Le
+Outside sources: minor chatpgt and github copilot 
+Creation Date: 9/9
 """
 import pygame
 import time

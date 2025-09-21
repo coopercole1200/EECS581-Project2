@@ -7,7 +7,9 @@ drawGameOver -> display the game over screen
 startGame -> initialize the game
 Inputs: User will select the number of bombs on the start page 
 Outputs: Playable minesweeper front end 
-Authors: Colin Treanor, Riley Anderson, Hannah Smith
+Outside sources: minor chatpgt and github copilot 
+Authors: Colin Treanor, Riley Anderson, Hannah Smith, Ryland Edwards 
+Creation Date: 8/28
 """
 
 import pygame
@@ -120,7 +122,7 @@ def drawGameboard():
 # draw you win page
 def drawEndScreen():
     # fill screen with gray
-    gameDisplay.fill((200, 200, 200)) # maybe remove this - just added it in case we need to draw over the game board
+    gameDisplay.fill((200, 200, 200)) 
     image = pygame.image.load('textures/Win_Screen.png').convert_alpha()
     gameDisplay.blit(image, (displaySize//2 - image.get_width()//2, HEADER_HEIGHT + displaySize//2 - image.get_height()//2))
     text = pygame.font.Font(None, 60).render("YOU WIN", True, (0,0,0))

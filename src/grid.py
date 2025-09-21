@@ -1,8 +1,33 @@
 '''
-RILEY ANDERSON & HANNAH SMITH 
+Functions: 
+make_grid -> allows for coordination between mouse coordinates and cell coordinates 
+get_cell -> return cell at coordinate (x, y), where (0,0) is upper leftmost cell,
+can take in seperate x, y OR a tuple (x, y)
+mouse_coord -> translate event coords into mouse coords that are helpful to us
+apply_bomb -> allow passing of single tuple of bomb coords, or a list of tuples of bomb coords
+idea is a list can be passed for initialization
+reveal -> allow passing of single tuple of reveal coords, or a list of tuples of reveal coords
+flag -> flag a cell
+check_coord -> return True if coord exists
+check_bomb -> return true is cell is marked as bomb
+check_nearby -> return true if cell's assigned nearby is strictly larger than 0
+check_win ->  return true only if all the cells are revealed that are not bombs 
+check_lose -> check for losing state
+print_debug -> print grid to terminal for debugging
+add_nearby -> calculates how many bombs are nearby a tile 
+place_bombs -> randomly places bombs on board outside of save zone
+_flood_helper -> recursive helper function to flood fill the board
+flood_revel -> public reveal function that calls recursive function
+
+Inputs:
+the size of the board, assumed that it will be vXv
+Outputs: 
+A grid class that will easily allow for manipulation 
+and storage for the minesweeper game. 
+
+Outside sources: minor chatpgt and github copilot 
+Authors: RILEY ANDERSON & HANNAH SMITH 
 CREATED: 08/26/2025
-Last Edited: 8/28/2025
-Class definition for array of cells for minesweeper game
 '''
 import random
 import math
@@ -16,6 +41,7 @@ class Grid():
         self.first = False
 
     def make_grid(self, mouse_coords):
+        #allows for coordination between mouse coordinates and cell coordinates 
         self.cell_list = []
         for coord in mouse_coords:
             target_cell = Cell(coord[0], coord[1])  # x, y order
@@ -33,6 +59,7 @@ class Grid():
             return self._grid[y][x]
         
     def mouse_coord(self, coords):
+        #translate event coords into mouse coords that are helpful to us
         x, y = coords
         padding = 50
         width = 50
@@ -96,12 +123,15 @@ class Grid():
         return False
 
     def check_win(self):
+        #return true only if all the cells are revealed that are not bombs 
         for row in self._grid:
             for cell in row:
-                if (not cell.revealed and not cell.bomb) or (cell.bomb and not cell.flagged):
+                if (not cell.revealed and not cell.bomb):
                     return False
         return True
     def check_lose(self):
+        #check for losing state
+        #when the user clicks on a bomb all the cells are revealed, here we are checking on that state 
         for row in self._grid:
             for cell in row:
                 if not cell.revealed:
@@ -118,7 +148,7 @@ class Grid():
         print(print_str)
 
     def add_nearby(self, cell_coord):
-        #calculates the nearby function -- this might have an error didn't dig in
+        #calculates the nearby function
         adjacent_transformations = [(-1, -1), (0, -1), (1, -1),
                                     (-1, 0),           (1, 0),
                                     (-1, 1),  (0, 1),  (1, 1)]
@@ -138,7 +168,7 @@ class Grid():
         self.apply_bomb(bomb_list)
 
     def _flood_helper(self, coords, reveal_list):
-        #recursive helper function to fill the board
+        #recursive helper function to flood fill the board
         #returns if outside of boundaries, already checked, is a bomb
         #reveals any squares with nearbys larger than 0, but does not explore further 
         if not self.check_coord(coords):
