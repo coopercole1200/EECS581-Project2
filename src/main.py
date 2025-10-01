@@ -266,7 +266,7 @@ def startGame():
 
 # determine bombs : overrides density default
     if numBombs is None:
-        bombs_count = max(1, round(preset['density'] * grid.size * grid.size))
+        bombs_count = 10
     else:
         bombs_count = int(numBombs)
         
