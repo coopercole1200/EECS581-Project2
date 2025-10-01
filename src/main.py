@@ -18,14 +18,22 @@ pygame.init()
 
 # --- header and render variables ---
 HEADER_HEIGHT = 150
+CELL_PIXELS = 50
 gameHeight = 10
 gameWidth = 10
-gameSize = 500
+gameSize = CELL_PIXELS * gameWidth
 padding = 50
-cellSize = gameSize // gameWidth
+cellSize = CELL_PIXELS
 displaySize = gameSize + padding * 2
 WINDOW_HEIGHT = HEADER_HEIGHT + displaySize
 stop_time = 0  # to freeze timer on win/lose
+DIFFICULTY_PRESETS = {
+    'Easy': {'size': 8, 'density': 0.12},
+    'Medium': {'size': 12, 'density': 0.16},
+    'Hard': {'size': 16, 'density': 0.20},
+}
+bombs_count = None
+difficulty_choice = 'Easy'
 
 #sprite group
 all_cells = pygame.sprite.Group()
@@ -67,6 +75,16 @@ mode_dropdown = Dropdown(
     direction='down',
     textHAlign='left'
 )
+# difficulty dropdown
+difficulty_dropdown = Dropdown(
+    gameDisplay, (displaySize//2)+100, HEADER_HEIGHT + (displaySize//2)-110, 80, 40,
+    name='Difficulty',
+    choices=['Easy', 'Medium', 'Hard'],
+    borderRadius=3,
+    colour=(255,255,255),
+    direction='down',
+    textHAlign='left'
+)
 
 MENU = True
 GAME = False
@@ -97,6 +115,7 @@ def drawStartMenu():
     bombLabel = labelFont.render("Bombs:", True, (0,0,0))
     aiLabel = labelFont.render("AI Mode:", True, (0,0,0))
     modeLabel = labelFont.render("Game Mode:", True, (0,0,0))
+    difficultyLabel = labelFont.render("Difficulty:", True, (0, 0, 0))
     
     # Background of the play area
     gameDisplay.fill((200, 200, 200))
@@ -114,6 +133,7 @@ def drawStartMenu():
     gameDisplay.blit(aiLabel, ((displaySize//2)-200, HEADER_HEIGHT + (displaySize//2)-200))
     gameDisplay.blit(modeLabel, ((displaySize//2)-200, HEADER_HEIGHT + (displaySize//2)-135))
     gameDisplay.blit(bombLabel, ((displaySize//2)+100, HEADER_HEIGHT + (displaySize//2)-200))
+    gameDisplay.blit(difficultyLabel, ((displaySize//2)+100, HEADER_HEIGHT + (displaySize//2)-135))
 
 # draw the main grid
 def drawGameboard():
@@ -130,15 +150,15 @@ def drawGameboard():
         pygame.draw.line(gameDisplay, (0, 0, 0), (padding, HEADER_HEIGHT + padding + y), (padding + gameSize, HEADER_HEIGHT + padding + y))
     
     # add column labels (A-J)
-    for i in range(10):
-        label = chr(ord('A') + i)
+    for i in range(grid.size):
+        label = chr(ord('A') + (i%26))
         text_surface = font.render(label, True, (0, 0, 0))
         x_pos = padding + (i * cellSize) + (cellSize // 2) - (text_surface.get_width() // 2)
         y_pos = HEADER_HEIGHT + padding - 20 
         gameDisplay.blit(text_surface, (x_pos, y_pos))
 
     # add row labels (1-10)
-    for i in range(10):
+    for i in range(grid.size):
         label = str(i + 1)
         text_surface = font.render(label, True, (0, 0, 0))
         x_pos = padding - 30 
@@ -165,6 +185,30 @@ def drawGameOver():
 # initialize the game
 def startGame():
     global all_cells, start_time, buoys_left, ai_solver, player_turn
+    global gameWidth, gameHeight, gameSize, cellSize, displaySize, WINDOW_HEIGHT
+    global bombs_count, gameDisplay, grid
+    
+# compute grid size from difficulty selection
+    preset = DIFFICULTY_PRESETS.get(difficulty_choice, DIFFICULTY_PRESETS['Easy'])
+
+# recompute grid
+    grid = Grid(preset['size'])
+
+# recompute window for new size
+    gameWidth = gameHeight = grid.size
+    cellSize = CELL_PIXELS
+    gameSize = cellSize * gameWidth
+    displaySize = gameSize + padding * 2
+    WINDOW_HEIGHT = HEADER_HEIGHT + displaySize
+    gameDisplay = pygame.display.set_mode((displaySize, WINDOW_HEIGHT))
+    init_header(displaySize, HEADER_HEIGHT)
+
+# determine bombs : overrides density default
+    if numBombs is None:
+        bombs_count = max(1, round(preset['density'] * grid.size * grid.size))
+    else:
+        bombs_count = int(numBombs)
+        
     all_cells.empty()
     mouse_coords = []
     for y in range(padding, padding + gameSize, cellSize):
@@ -177,7 +221,7 @@ def startGame():
 
     # header state
     start_time = time.time()
-    buoys_left = 10
+    buoys_left = bombs_count
     # Player always goes first in interactive mode
     player_turn = True
     
@@ -208,9 +252,15 @@ while running:
                     numBombs = dropdown.getSelected()
                     ai_mode = ai_dropdown.getSelected()
                     game_mode = mode_dropdown.getSelected() if ai_mode != 'None' else 'Auto'
+                    diff = difficulty_dropdown.getSelected()
+                    if diff:
+                        difficulty_choice = diff
+                    if diff is not None:
+                        globals()['difficulty_choice'] = diff
                     dropdown = None
                     ai_dropdown = None
                     mode_dropdown = None
+                    difficulty_dropdown = None
                     startGame()
                     drawGameboard()
                     MENU = False
@@ -231,7 +281,7 @@ while running:
                         mc = grid.mouse_coord(adj_pos)
                         if mc is not None:
                             if numBombs is not None:
-                                grid.flood_revel(mc, int(numBombs))
+                                grid.flood_revel(mc, bombs_count)
                             else:
                                 grid.flood_revel(mc)
                             
@@ -274,7 +324,7 @@ while running:
             if ai_grid_coord:
                 # Reveals AI's choice on the board
                 if numBombs is not None:
-                    grid.flood_revel(ai_grid_coord, int(numBombs))
+                    grid.flood_revel(ai_grid_coord, bombs_count)
                 else:
                     grid.flood_revel(ai_grid_coord)
                 
