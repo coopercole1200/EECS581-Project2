@@ -9,6 +9,7 @@ import pygame_widgets
 from grid import Grid
 from pygame_widgets.dropdown import Dropdown
 from ai_solver import AISolver
+import random
 
 # --- header imports ---
 from header import init_header, draw_header
@@ -97,8 +98,13 @@ ai_mode = None
 game_mode = 'Auto'
 player_turn = True
 
+# Hint system variables
+hints_remaining = 3
+
 # button (shifted below header)
 startButton = pygame.Rect((displaySize//2)-125, HEADER_HEIGHT + 125, 200, 60)
+# hint button (positioned in top right of game area)
+hintButton = pygame.Rect(displaySize - 100, HEADER_HEIGHT, 90, 30)
 
 # header setup
 init_header(displaySize, HEADER_HEIGHT)  # load/scale header assets once
@@ -165,6 +171,22 @@ def drawGameboard():
         y_pos = HEADER_HEIGHT + padding + (i * cellSize) + (cellSize // 2) - (text_surface.get_height() // 2)
         gameDisplay.blit(text_surface, (x_pos, y_pos))
     
+    # Draw hint button
+    mouse_pos = pygame.mouse.get_pos()
+    if hints_remaining > 0:
+        button_color = (0, 200, 0) if hintButton.collidepoint(mouse_pos) else (0, 150, 0)
+    else:
+        button_color = (100, 100, 100)  # Gray when no hints left
+    
+    pygame.draw.rect(gameDisplay, button_color, hintButton)
+    pygame.draw.rect(gameDisplay, (0, 0, 0), hintButton, 2)  # Black border
+    
+    # Draw hint text
+    hint_font = pygame.font.SysFont('Arial', 14)
+    hint_text = hint_font.render(f"Hint ({hints_remaining})", True, (255, 255, 255))
+    text_rect = hint_text.get_rect(center=hintButton.center)
+    gameDisplay.blit(hint_text, text_rect)
+    
 # draw you win page
 def drawEndScreen():
     # fill screen with gray
@@ -182,11 +204,33 @@ def drawGameOver():
     text = pygame.font.Font(None, 60).render("GAME OVER", True, (0,0,0))
     gameDisplay.blit(text, (displaySize//2 - 125, HEADER_HEIGHT + displaySize//2))
 
+# use a hint to reveal a random safe tile
+def use_hint():
+    global hints_remaining
+    if hints_remaining <= 0:
+        return False
+    
+    # Find all safe, unrevealed, unflagged tiles
+    safe_tiles = []
+    for row in range(grid.size):
+        for col in range(grid.size):
+            cell = grid.get_cell((col, row))
+            if not cell.bomb and not cell.revealed and not cell.flagged:
+                safe_tiles.append((col, row))
+    
+    if safe_tiles:
+        # Pick a random safe tile and reveal it
+        hint_coord = random.choice(safe_tiles)
+        grid.flood_revel(hint_coord, bombs_count if bombs_count else None)
+        hints_remaining -= 1
+        return True
+    return False
+
 # initialize the game
 def startGame():
     global all_cells, start_time, buoys_left, ai_solver, player_turn
     global gameWidth, gameHeight, gameSize, cellSize, displaySize, WINDOW_HEIGHT
-    global bombs_count, gameDisplay, grid
+    global bombs_count, gameDisplay, grid, hints_remaining, hintButton
     
 # compute grid size from difficulty selection
     preset = DIFFICULTY_PRESETS.get(difficulty_choice, DIFFICULTY_PRESETS['Easy'])
@@ -224,6 +268,11 @@ def startGame():
     buoys_left = bombs_count
     # Player always goes first in interactive mode
     player_turn = True
+    
+    # Reset hints for new game
+    hints_remaining = 3
+    # Update hint button position for new window size
+    hintButton = pygame.Rect(displaySize - 110, HEADER_HEIGHT + 10, 100, 40)
     
     # Initialize AI if mode is selected
     if ai_mode and ai_mode != 'None':
@@ -271,10 +320,18 @@ while running:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                # Check if hint button was clicked
+                if event.button == 1 and hintButton.collidepoint(event.pos) and hints_remaining > 0:
+                    # Only allow hints if it's player's turn (or no AI)
+                    can_use_hint = (ai_mode == 'None') or (game_mode == 'Interactive' and player_turn)
+                    if can_use_hint:
+                        use_hint()
+                        # In interactive mode, using a hint doesn't switch turns
+                
                 # Only allow player input if None AI selected or Interactive mode and it's player's turn
                 can_play = (ai_mode == 'None') or (game_mode == 'Interactive' and player_turn)
                 
-                if can_play:
+                if can_play and not hintButton.collidepoint(event.pos):  # Don't process game clicks on hint button
                     adj_pos = (event.pos[0], event.pos[1] - HEADER_HEIGHT)
                     
                     if event.button == 1:  # Left click - reveals cells
