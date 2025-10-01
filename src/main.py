@@ -1,8 +1,25 @@
 """
+Original Team
 Description: Implements Minesweeper Game.
 Authors: Riley England, Jackson Yanek, Evan Chigweshe, Manu Redd, Cole Cooper
 External Sources: Generative AI, Pygame documentation, NumPy documentation
 """
+
+"""
+New Team
+Description: Maintenance of Minesweeper Game.
+Authors: Cole Cooper, Manu Redd, Riley England, Jackson Yanek, Evans Chigweshe
+External Sources: Generative AI, Pygame documentation, NumPy documentation
+"""
+
+"""
+Functions:
+
+Inputs:
+
+Outputs:
+"""
+
 
 import pygame
 import pygame_widgets

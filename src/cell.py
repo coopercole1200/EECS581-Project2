@@ -1,3 +1,11 @@
+"""
+New Team
+Description: Cell Class for Minesweeper Game.
+Authors: Cole Cooper, Manu Redd, Riley England, Jackson Yanek, Evans Chigweshe
+External Sources: Generative AI, Pygame documentation, NumPy documentation
+"""
+
+
 '''
 functions: 
 update -> #func that updates sprite image based on state

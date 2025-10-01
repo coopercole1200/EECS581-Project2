@@ -1,4 +1,12 @@
 """
+New Team
+Description: Header for Minesweeper Game.
+Authors: Cole Cooper, Manu Redd, Riley England, Jackson Yanek, Evans Chigweshe
+External Sources: Generative AI, Pygame documentation, NumPy documentation
+"""
+
+
+"""
 Functions:
 init_header -> load/scale header assets (images, fonts)
 draw_header -> render header (planks, wheel, compass, buoy count, timer, "NOW PLAYING")

@@ -1,3 +1,11 @@
+"""
+New Team
+Description: Grid Class for Minesweeper Game.
+Authors: Cole Cooper, Manu Redd, Riley England, Jackson Yanek, Evans Chigweshe
+External Sources: Generative AI, Pygame documentation, NumPy documentation
+"""
+
+
 '''
 Functions: 
 make_grid -> allows for coordination between mouse coordinates and cell coordinates 
