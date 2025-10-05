@@ -71,7 +71,8 @@ class Grid():
         x, y = coords
         padding = 50
         width = 50
-        if (padding < x < (width * 10)+padding) and (padding < y < (width * 10)+padding):
+        # use self.size instead of hardcoded 10 so the clickable area matches grid size
+        if (padding < x < (width * self.size)+padding) and (padding < y < (width * self.size)+padding):
             return((x-padding) // width, (y-padding) // width)
         return None
     

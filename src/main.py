@@ -56,7 +56,7 @@ difficulty_choice = 'Easy'
 #sprite group
 all_cells = pygame.sprite.Group()
 #Grid class
-grid = Grid()
+# grid = Grid()
 
 gameDisplay = pygame.display.set_mode((displaySize, WINDOW_HEIGHT)) #display
 pygame.display.set_caption("Minesweeper") 
