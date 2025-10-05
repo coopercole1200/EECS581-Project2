@@ -406,12 +406,13 @@ while running:
                 if game_mode == 'Interactive':
                     player_turn = True
         
-        if grid.check_win():
-            WIN = True
-            GAME = False
-        elif grid.check_lose():
+        if grid.check_lose():
             GAMEOVER = True
             GAME = False
+        elif grid.check_win():
+            WIN = True
+            GAME = False
+
         
         drawGameboard()  # Redraw board each frame
         all_cells.clear(gameDisplay, gameDisplay)

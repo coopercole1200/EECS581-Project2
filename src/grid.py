@@ -134,17 +134,18 @@ class Grid():
         #return true only if all the cells are revealed that are not bombs 
         for row in self._grid:
             for cell in row:
-                if (not cell.revealed and not cell.bomb):
-                    return False
+                    if not cell.bomb and not cell.revealed:
+                        return False
         return True
     def check_lose(self):
         #check for losing state
-        #when the user clicks on a bomb all the cells are revealed, here we are checking on that state 
+
+        # Losing occurs when any bomb cell has been revealed (user clicked a bomb).
         for row in self._grid:
             for cell in row:
-                if not cell.revealed:
-                    return False
-        return True
+                if cell.bomb and cell.revealed:
+                    return True
+        return False
 
     def print_debug(self):
         #print grid to terminal for debugging
