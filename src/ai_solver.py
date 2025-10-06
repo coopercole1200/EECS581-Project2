@@ -67,14 +67,34 @@ class AISolver:
         Medium AI: Strategic play after finding safe cells
         Uncovers randomly until a safe cell (zero adjacent mines) is revealed
         then uncovers adjacent cells strategically using revealed numbers and flags
+        also flags cells when remaining surrounding cells equals cell number
         """
+        # Auto flag bomb locations
+        self._auto_flag()
         # Check for strategic moves based on revealed cells
         strategic_move = self._find_strategic_move()
         if strategic_move:
-            return strategic_move
-        
+            return strategic_move   
         # Otherwise make a random move
         return self.easy_move()
+
+    def _auto_flag(self):
+        """
+        Auto-flag cells that must be bombs
+        If a revealed cell's number equals the count of surrounding unrevealed cells,
+        all those unrevealed cells must be bombs
+        """
+        revealed = self.get_revealed_cells()
+        for coord in revealed:
+            cell = self.grid.get_cell(coord)
+            if cell and cell.revealed and cell.nearby > 0:
+                adjacent_unrevealed = self._get_adjacent_unrevealed(coord)
+                adjacent_flagged = self._get_adjacent_flagged(coord) 
+                # If number of unrevealed + flagged equals cell's number,
+                # and there are unrevealed cells, flag them
+                if len(adjacent_unrevealed) + len(adjacent_flagged) == cell.nearby:
+                    for flag_coord in adjacent_unrevealed:
+                        self.grid.flag(flag_coord)
     
     def _find_strategic_move(self):
         """
