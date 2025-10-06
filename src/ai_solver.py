@@ -4,6 +4,40 @@ Authors: Riley England, Jackson Yanek, Evan Chigweshe, Manu Redd, Cole Cooper
 External Sources: Generative AI, Pygame documentation, NumPy documentation
 """
 
+"""
+Functions:
+- __init__(grid, difficulty): Initialize AI solver with grid reference and difficulty level
+- can_make_move(): Check if enough time has passed since last move based on move delay
+- get_unrevealed_cells(): Return list of coordinates for unrevealed, unflagged cells
+- get_revealed_cells(): Return list of coordinates for revealed cells
+- easy_move(): Select random unrevealed cell for AI move (easy difficulty)
+- medium_move(): Use strategic analysis with auto-flagging and safe cell detection
+- hard_move(): Perfect play AI that always selects safe cells when available
+- _auto_flag(): Automatically flag cells that must be bombs based on revealed numbers
+- _find_strategic_move(): Analyze revealed cells to find guaranteed safe moves
+- _get_adjacent_unrevealed(coord): Get adjacent unrevealed/unflagged cells for given coordinate
+- _get_adjacent_flagged(coord): Get adjacent flagged cells for given coordinate
+- make_move(): Main move function that calls appropriate difficulty-specific move method
+- grid_to_mouse_coords(grid_coord): Convert grid coordinates to pixel mouse coordinates
+- set_difficulty(difficulty): Change AI difficulty level during gameplay
+- set_move_delay(delay): Adjust time delay between AI moves
+
+Inputs:
+- Grid object: Reference to the minesweeper grid for cell analysis and manipulation
+- Difficulty string: 'easy', 'medium', or 'hard' to determine AI behavior
+- Move delay float: Time in seconds between AI moves for pacing
+- Cell coordinates: (x, y) tuples for grid position analysis
+- Time constraints: System time checks for move timing control
+
+Outputs:
+- Grid coordinates: (x, y) tuples representing AI's chosen move location
+- Cell lists: Arrays of coordinates for unrevealed, revealed, or flagged cells
+- Boolean values: Success/failure states for move timing and validation
+- Mouse coordinates: Pixel positions converted from grid coordinates
+- Strategic analysis: Safe move detection and automatic bomb flagging
+- None values: Returned when no valid moves are available or timing constraints not met
+"""
+
 import random
 import time
 

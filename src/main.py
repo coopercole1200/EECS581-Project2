@@ -14,10 +14,24 @@ External Sources: Generative AI, Pygame documentation, NumPy documentation
 
 """
 Functions:
+- drawStartMenu(): Renders the main menu with game configuration options and start button
+- drawGameboard(): Renders the main game grid with labels, hint button, and cell sprites
+- drawEndScreen(): Displays the win screen with victory message and graphics
+- drawGameOver(): Displays the game over screen with loss message and graphics
+- use_hint(): Reveals a random safe (non-bomb) tile, decrements hint counter
+- startGame(): Initializes new game state, creates grid, places bombs, resets variables
 
 Inputs:
+- Mouse clicks: Left click to reveal cells, right click to flag cells, hint button clicks
+- Keyboard input: ESC key to exit game
+- Dropdown selections: Bomb count, AI difficulty, game mode, board difficulty
+- Game configuration: Board size, bomb density, AI settings
 
 Outputs:
+- Visual game display: Pygame window with minesweeper grid, header, and UI elements
+- Game state feedback: Win/loss screens, timer, bomb counter, hint counter
+- Audio/Visual cues: Button hover effects, cell reveal animations via sprites
+- AI move execution: Automated tile reveals when AI mode is active
 """
 
 
