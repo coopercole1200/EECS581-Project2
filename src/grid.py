@@ -41,6 +41,22 @@ import random
 import math
 from cell import Cell
 
+import pygame
+import pygame_widgets
+
+pygame.init()
+
+
+
+# Loads the sounds
+sound_2 = pygame.mixer.Sound('sound_effects/game_lost.mp3')
+sound_3 = pygame.mixer.Sound('sound_effects/cell_click.wav')
+sound_4 = pygame.mixer.Sound('sound_effects/morecells.wav')
+sound_5 = pygame.mixer.Sound('sound_effects/mine_found.wav')
+sound_6 = pygame.mixer.Sound('sound_effects/game_won.mp3')
+sound_7 = pygame.mixer.Sound('sound_effects/game_over.mp3')
+sound_8 = pygame.mixer.Sound('sound_effects/won_game.mp3')
+
 class Grid():
     def __init__(self, size=10):
         #initialize a grid of cells, default size 10
@@ -122,6 +138,7 @@ class Grid():
     def check_bomb(self, coord):
         #return true is cell is marked as bomb
         if self.get_cell(coord).bomb:
+            sound_5.play()# play sound track after someone has clicked on a mine
             return True
         return False 
     
@@ -136,8 +153,11 @@ class Grid():
         for row in self._grid:
             for cell in row:
                     if not cell.bomb and not cell.revealed:
-                        return False
+                        return False           
+        sound_6.play() # play sound track after someone has won the game
+        sound_8.play() # play sound track after someone has won the game
         return True
+    
     def check_lose(self):
         #check for losing state
 
@@ -145,6 +165,8 @@ class Grid():
         for row in self._grid:
             for cell in row:
                 if cell.bomb and cell.revealed:
+                    sound_2.play() # play sound track after someone has lost the game
+                    sound_7.play() # play sound track after someone has lost the game
                     return True
         return False
 
@@ -215,6 +237,17 @@ class Grid():
         revel_list = []
         self._flood_helper(coords, revel_list)
         self.reveal(revel_list)
+
+
+
+  # The sound being played different number of cells are revealed 
+        if len(revel_list) > 1:
+            sound_4.play()  # many cells
+        elif len(revel_list) == 1:
+            sound_3.play()  # single cell
+
+
+
         # self.print_debug()
 
 # #test / demo logic

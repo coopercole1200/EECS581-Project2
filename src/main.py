@@ -72,6 +72,9 @@ all_cells = pygame.sprite.Group()
 #Grid class
 # grid = Grid()
 
+# Load the sound 
+sound_1 = pygame.mixer.Sound('sound_effects/background_music.mp3')
+
 gameDisplay = pygame.display.set_mode((displaySize, WINDOW_HEIGHT)) #display
 pygame.display.set_caption("Minesweeper") 
 
@@ -343,6 +346,7 @@ while running:
                     difficulty_dropdown = None
                     startGame()
                     drawGameboard()
+                    sound_1.play(-1) # Play the background music in an infinite loop (repeats until stopped manually)
                     MENU = False
                     GAME = True
                     if numBombs is not None:
@@ -393,8 +397,10 @@ while running:
         drawStartMenu()
         pygame_widgets.update(events)
     elif GAMEOVER:
+        sound_1.stop() # Stops the Background music
         drawGameOver()
     elif WIN:
+        sound_1.stop() # Stops the Background music
         drawEndScreen()
     else:
         # AI Turns
